@@ -19,7 +19,6 @@ class UserManager(BaseUserManager):
         return user
 
     
-
 class User(AbstractBaseUser):
     """
     This model defines user in the system
@@ -30,7 +29,7 @@ class User(AbstractBaseUser):
     email = models.EmailField(max_length=255, unique=True)
     mobile = models.CharField(max_length=14)
     password = models.CharField(max_length=255)
-
+    role_id = models.CharField(max_length=255, default=1)
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
