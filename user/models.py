@@ -18,7 +18,20 @@ class UserManager(BaseUserManager):
 
         return user
 
-    
+
+class UserRole(models.Model):
+    """
+    This model defines user role in the system
+    """
+
+    class Meta:
+        db_table = 'userrole'
+
+    role_name = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return self.role_name
+
 class User(AbstractBaseUser):
     """
     This model defines user in the system
@@ -29,7 +42,7 @@ class User(AbstractBaseUser):
     email = models.EmailField(max_length=255, unique=True)
     mobile = models.CharField(max_length=14)
     password = models.CharField(max_length=255)
-    role_id = models.CharField(max_length=255, default=1)
+    role_id = models.ForeignKey(UserRole, on_delete=models.CASCADE, default=1)
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
