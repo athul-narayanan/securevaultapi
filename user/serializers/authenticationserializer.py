@@ -22,7 +22,7 @@ class AuthenticationSerializer(serializers.Serializer):
 
         userdata =  get_cache(user['otp'])
 
-        if userdata is None:
+        if userdata is None or userdata["email"] != user["email"]:
            raise AuthenticationFailed("Invalid/Expired OTP")
         
         userdata = pickle.loads(userdata)
