@@ -11,9 +11,25 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+MEDIA_URL = '/uploads/'
+
+AES_KEY = "asdgnhthyjloiuhnbg56791234567hsd"
+AES_BLOCK_SIZE = 32
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Basic': {
+            'type': 'basic'
+        }
+    }
+}
 
 
 # Quick-start development settings - unsuitable for production
@@ -48,6 +64,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework_simplejwt',
     'user',
+    'fileupload',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -115,7 +133,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 SIMPLE_JWT = {
-    "TOKEN_OBTAIN_SERIALIZER": "user.serializers.AuthenticationSerializer"
+    "TOKEN_OBTAIN_SERIALIZER": "user.serializers.AuthenticationSerializer",
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),  # 1 hour for access token
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # 7 days for refresh token
 }
 
 CACHES = {
