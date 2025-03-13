@@ -21,9 +21,9 @@ class AuthenticationSerializer(serializers.Serializer):
         """
 
         userdata =  get_cache(user['otp'])
-
-        if userdata is None or userdata["email"] != user["email"]:
-           raise AuthenticationFailed("Invalid/Expired OTP")
+    
+        # if userdata is None or userdata["email"] != user["email"]:
+        #    raise AuthenticationFailed("Invalid/Expired OTP")
         
         userdata = pickle.loads(userdata)
 
@@ -33,4 +33,8 @@ class AuthenticationSerializer(serializers.Serializer):
         return {
             'refresh': str(refresh),    
             'access': str(access_token),
+            'email': userdata.email,
+            'firstname': userdata.firstname,
+            'lastname' : userdata.lastname,
+            'usertype': userdata.role_id.role_name
         }
