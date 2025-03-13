@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from fileupload.models import Files
 from django.conf import settings
-from rest_framework import parsers, renderers, serializers, status
+from rest_framework import parsers
 import os
 import time
 from utils.encrypt import encrypt_file
@@ -16,6 +16,7 @@ class FileUploadView(generics.GenericAPIView):
 
     serializer_class = FileUploadSerializer
     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
+
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(raise_exception=True):

@@ -21,7 +21,7 @@ class AuthenticationSerializer(serializers.Serializer):
         """
 
         userdata =  get_cache(user['otp'])
-
+    
         # if userdata is None or userdata["email"] != user["email"]:
         #    raise AuthenticationFailed("Invalid/Expired OTP")
         
@@ -33,4 +33,8 @@ class AuthenticationSerializer(serializers.Serializer):
         return {
             'refresh': str(refresh),    
             'access': str(access_token),
+            'email': userdata.email,
+            'firstname': userdata.firstdata,
+            'lastname' : userdata.lastname,
+            'usertype': userdata.role_id.role_name
         }

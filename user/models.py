@@ -39,6 +39,8 @@ class User(AbstractBaseUser):
     class Meta:
         db_table = 'user' 
         
+    firstname = models.CharField(max_length=255)
+    lastname = models.CharField(max_length=255)
     email = models.EmailField(max_length=255, unique=True)
     mobile = models.CharField(max_length=14)
     password = models.CharField(max_length=255)
