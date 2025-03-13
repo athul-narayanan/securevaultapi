@@ -34,7 +34,7 @@ class AuthenticationSerializer(serializers.Serializer):
             'refresh': str(refresh),    
             'access': str(access_token),
             'email': userdata.email,
-            'firstname': userdata.firstdata,
+            'firstname': userdata.firstname,
             'lastname' : userdata.lastname,
             'usertype': userdata.role_id.role_name
         }
