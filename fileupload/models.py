@@ -15,6 +15,7 @@ class Files(models.Model):
     file_name = models.CharField(max_length=255)
     file_link = models.CharField(max_length=255, unique=True)
     created_time = models.DateField(auto_now=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class FileAccessRoles(models.Model):
     """
@@ -40,6 +41,6 @@ class UserFileAccess(models.Model):
     file = models.ForeignKey(Files, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     access = models.ForeignKey(FileAccessRoles, on_delete=models.CASCADE)
-    created_time = models.DateField()
-    updated_time = models.DateField()
+    created_time = models.DateField(auto_now=True)
+    updated_time = models.DateField(auto_now=True)
 

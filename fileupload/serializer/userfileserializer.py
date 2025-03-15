@@ -5,7 +5,7 @@
 from rest_framework import serializers
 from fileupload.models import UserFileAccess
 
-class UserFileSerializer(serializers.Serializer):
+class UserFileSerializer(serializers.ModelSerializer):
     """
 
     """

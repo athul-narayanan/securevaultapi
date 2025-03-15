@@ -1,13 +1,14 @@
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
-from fileupload.models import Files
 from django.conf import settings
 from rest_framework import parsers
 import os
 import time
 from utils.encrypt import encrypt_file
 from fileupload.serializer.fileuploadserializer import FileUploadSerializer
+from fileupload.models import Files
+from fileupload.models import UserFileAccess, FileAccessRoles
 
 class FileUploadView(generics.GenericAPIView):
     """
@@ -29,10 +30,22 @@ class FileUploadView(generics.GenericAPIView):
                 f.write(iv)
                 f.write(encypted_data)
 
+            filename = file['file'].name
+            filelink = f"{random_str}{file['file'].name}"
+
             updatedfile = Files.objects.create(
-                file_name = file['file'].name,
-                file_link = f"{random_str}{file['file'].name}"
+                file_name = filename,
+                file_link = filelink,
+                user = request.user
             )
+
+            access = FileAccessRoles.objects.get(id=1)
+            UserFileAccess.objects.create(
+                file = updatedfile,
+                access = access,
+                user= request.user,
+            )
+            
             return Response({
                 'message': 'File uploaded successfully',
                 'id': updatedfile.id

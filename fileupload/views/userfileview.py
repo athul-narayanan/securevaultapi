@@ -8,10 +8,10 @@ class UserFileView(generics.GenericAPIView):
     This view is used to fetch and insert files associated with a user
     """
 
-    def get(self, request, user_id):
+    def get(self, request):
         """
             Fetch all files accessible to the user
         """
-        files =  UserFileAccess.objects.get(user=user_id)
-        serializedData = UserFileSerializer(files)
+        files =  UserFileAccess.objects.filter(user=request.user)
+        serializedData = UserFileSerializer(files, many=True)
         return Response(serializedData.data)
