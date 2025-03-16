@@ -15,6 +15,8 @@ class Files(models.Model):
     file_name = models.CharField(max_length=255)
     file_link = models.CharField(max_length=255, unique=True)
     created_time = models.DateField(auto_now=True)
+    size = models.CharField(max_length=255)
+    type = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class FileAccessRoles(models.Model):

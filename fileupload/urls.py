@@ -9,6 +9,6 @@ from fileupload.views.userfileview import UserFileView
 
 urlpatterns = [
     path('upload', FileUploadView.as_view()),
-    path('upload/all', UserFileView.as_view()),
-    path('upload/<str:file_name>', FileHandleView.as_view())
+    path('upload/<str:file_name>', FileHandleView.as_view()),
+    path('files', UserFileView.as_view()),
 ]

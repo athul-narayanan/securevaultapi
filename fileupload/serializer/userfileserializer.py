@@ -3,12 +3,12 @@
 """
 
 from rest_framework import serializers
-from fileupload.models import UserFileAccess
+from fileupload.models import Files
 
 class UserFileSerializer(serializers.ModelSerializer):
     """
 
     """
     class Meta:
-        model = UserFileAccess
+        model = Files
         fields = '__all__'

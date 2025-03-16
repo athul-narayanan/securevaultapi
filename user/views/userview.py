@@ -53,3 +53,36 @@ class UserView(generics.CreateAPIView):
         user.save()
        
         return Response(status=status.HTTP_200_OK)
+    
+class GetAllUsersView(generics.CreateAPIView):
+    """
+    This view is used to get all details
+    """
+
+    def get(self, request):
+        data = User.objects.filter(role_id__lt=request.user.role_id)
+        users = UserSerializer(data, many=True) 
+        return Response(users.data)
+   
+   
+
+    def put(self, request):
+        """
+         This methode updates the role of user
+        """
+        user = self.get(request.data.get("email"))
+
+        if user is None:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        # User at a lower level can't update the role of user at higher level
+        # User at a level can assign roles less than their role
+        if request.data.get('role_id') >= request.user.role_id.id or user.role_id.id >= request.user.role_id.id :
+            return Response({"error": "You are not authorized to update the role"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        userrole = UserRole.objects.get(id=request.data.get('role_id'))
+        user.role_id = userrole
+
+        user.save()
+       
+        return Response(status=status.HTTP_200_OK)
