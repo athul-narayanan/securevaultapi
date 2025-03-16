@@ -63,13 +63,6 @@ class FileUploadView(generics.GenericAPIView):
                 type=filetype,
                 user = request.user
             )
-
-            access = FileAccessRoles.objects.get(id=1)
-            UserFileAccess.objects.create(
-                file = updatedfile,
-                access = access,
-                user= request.user,
-            )
             
             return Response({
                 'message': 'File uploaded successfully',
