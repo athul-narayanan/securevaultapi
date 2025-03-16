@@ -141,7 +141,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 SIMPLE_JWT = {
     "TOKEN_OBTAIN_SERIALIZER": "user.serializers.AuthenticationSerializer",
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),  # 1 hour for access token
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=48),  # 48 hour for access token
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # 7 days for refresh token
 }
 
