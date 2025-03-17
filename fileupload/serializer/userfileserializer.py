@@ -5,13 +5,14 @@
 from rest_framework import serializers
 from fileupload.models import Files, UserFileAccess
 
+
 class UserFileSerializer(serializers.ModelSerializer):
     """
 
     """
     class Meta:
         model = Files
-        fields = '__all__'
+        fields = ['id', 'file_link', 'file_name', 'created_time', 'size', 'type',  'user' ]
 
 class SharedFileSerializer(serializers.ModelSerializer):
     """

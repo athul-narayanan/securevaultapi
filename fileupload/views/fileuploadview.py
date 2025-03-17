@@ -8,7 +8,6 @@ import time
 from utils.encrypt import encrypt_file
 from fileupload.serializer.fileuploadserializer import FileUploadSerializer
 from fileupload.models import Files
-from fileupload.models import UserFileAccess, FileAccessRoles
 import magic
 
 class FileUploadView(generics.GenericAPIView):
