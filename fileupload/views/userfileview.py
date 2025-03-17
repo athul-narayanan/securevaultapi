@@ -18,7 +18,7 @@ class UserFileView(generics.GenericAPIView):
         """
             Fetch all files accessible to the user
         """
-        files =  Files.objects.filter(user=request.user)
+        files =  Files.objects.filter(user=request.user,is_delete=False)
         serializedData = UserFileSerializer(files, many=True)
         return Response(serializedData.data)
 
@@ -95,3 +95,15 @@ class MoveToBinView(generics.GenericAPIView):
         else:
             return Response({"error": "file not found"}, status=status.HTTP_400_BAD_REQUEST)
     
+class BinFileView(generics.GenericAPIView):
+    """
+    This view is to get files in bin
+    """
+
+    def get(self,request):
+        """
+            Fetch all files in bin
+        """
+        files =  Files.objects.filter(user=request.user,is_delete=True)
+        serializedData = UserFileSerializer(files, many=True)
+        return Response(serializedData.data)
