@@ -18,6 +18,7 @@ class Files(models.Model):
     size = models.CharField(max_length=255)
     type = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_delete = models.BooleanField(default=False)
 
 class FileAccessRoles(models.Model):
     """
