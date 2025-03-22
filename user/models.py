@@ -7,6 +7,9 @@ from django.contrib.auth.models import(
     BaseUserManager,
 )
 
+from auditlog.registry import auditlog
+
+
 class UserManager(BaseUserManager):
     """
     Manager class for User model
@@ -17,6 +20,15 @@ class UserManager(BaseUserManager):
         user.save()
 
         return user
+    
+    def create_superuser(self, email, password, **fields):
+        """
+            Creates super user
+        """
+        fields.setdefault("is_staff", "True")
+        fields.setdefault("is_superuser", "True")
+
+        return self.create_user(email, password, **fields)
 
 
 class UserRole(models.Model):
@@ -46,5 +58,27 @@ class User(AbstractBaseUser):
     password = models.CharField(max_length=255)
     role_id = models.ForeignKey(UserRole, on_delete=models.CASCADE, default=1)
     objects = UserManager()
+    is_staff = models.BooleanField(default=False)  
+    is_superuser = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
+
+    
+    def has_module_perms(self, app_label):
+        """
+            Return true if a user has access for given app
+        """
+        if self.is_superuser:
+            return True
+        return False
+
+    def has_perm(self, perm, obj=None):
+        """
+           Return true if user has specific permission
+        """
+        if self.is_superuser:
+            return True
+        return False
+
+auditlog.register(User)
+auditlog.register(UserRole)

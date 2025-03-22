@@ -3,7 +3,7 @@ View for User model
 """
 
 from rest_framework import generics
-from user.serializers.userserializer import UserSerializer
+from user.serializers.userserializer import UserGetSerializer, UserSerializer
 from user.serializers.otpserializer import OTPSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -61,7 +61,7 @@ class GetAllUsersView(generics.CreateAPIView):
 
     def get(self, request):
         data = User.objects.filter(role_id__lt=request.user.role_id)
-        users = UserSerializer(data, many=True) 
+        users = UserGetSerializer(data, many=True) 
         return Response(users.data)
    
    
