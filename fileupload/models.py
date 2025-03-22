@@ -2,7 +2,7 @@ from django.db import models
 
 from user.models import User
 
-
+from auditlog.registry import auditlog
 
 class Files(models.Model):
     """
@@ -46,4 +46,11 @@ class UserFileAccess(models.Model):
     access = models.ForeignKey(FileAccessRoles, on_delete=models.CASCADE)
     created_time = models.DateField(auto_now=True)
     updated_time = models.DateField(auto_now=True)
+
+
+# Register Audit log for files model
+auditlog.register(Files)
+auditlog.register(FileAccessRoles)
+auditlog.register(UserFileAccess)
+
 

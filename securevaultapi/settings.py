@@ -66,7 +66,8 @@ INSTALLED_APPS = [
     'user',
     'fileupload',
     'drf_yasg',
-    'corsheaders'
+    'corsheaders',
+    "auditlog"
 ]
 
 MIDDLEWARE = [
@@ -78,7 +79,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware'
+    'django.middleware.common.CommonMiddleware',
+    'auditlog.middleware.AuditlogMiddleware',
+    "user.middleware.RequestMiddleware",
+    "fileupload.middleware.RequestMiddleware"
 ]
 
 CORS_ALLOWED_ORIGINS = [
