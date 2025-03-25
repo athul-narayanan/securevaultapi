@@ -88,7 +88,6 @@ class MoveToBinView(generics.GenericAPIView):
         if instance.user != request.user:
             return Response({"error": "you are not authorized to move the file to bin"}, status=status.HTTP_401_UNAUTHORIZED)
         if os.path.exists(filepath): 
-            UserFileAccess.objects.filter(file = instance.id).delete()
             instance.is_delete = True
             instance.save()
             return Response({"message":"File Moved to Bin Successfully"}, status=status.HTTP_200_OK)
