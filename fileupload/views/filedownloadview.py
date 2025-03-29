@@ -7,6 +7,8 @@ import time
 from utils.encrypt import decrypt_file
 from fileupload.models import Files
 from rest_framework import status
+from auditlog.models import LogEntry
+from django.contrib.contenttypes.models import ContentType
 
 
 
@@ -18,7 +20,14 @@ class FileHandleView(generics.GenericAPIView):
     def get(self, request, file_name):
        filepath = os.path.join(settings.MEDIA_ROOT, file_name )
        file_content = decrypt_file(filepath)
-       
+       # Create Audit log for file download
+       LogEntry.objects.create(
+            content_type=ContentType.objects.get_for_model(Files),
+            action=3, 
+            object_repr = file_name,
+            changes_text = f"{file_name} downloaded",
+            actor = request.user
+        )
        response = HttpResponse(file_content, content_type='application/octet-stream')
        response['Content-Disposition'] = f'attachment; filename="{file_name}"'
        return response
