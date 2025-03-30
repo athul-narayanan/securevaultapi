@@ -16,7 +16,6 @@ class FileHandleView(generics.GenericAPIView):
     """
     This view is used to download and delete file
     """
-    
     def get(self, request, file_name):
        filepath = os.path.join(settings.MEDIA_ROOT, file_name )
        file_content = decrypt_file(filepath)

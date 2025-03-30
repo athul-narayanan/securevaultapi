@@ -67,7 +67,8 @@ INSTALLED_APPS = [
     'fileupload',
     'drf_yasg',
     'corsheaders',
-    "auditlog"
+    "auditlog",
+    "auditlogs"
 ]
 
 MIDDLEWARE = [
