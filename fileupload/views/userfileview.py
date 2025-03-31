@@ -1,6 +1,6 @@
 from rest_framework import generics
 from rest_framework.response import Response
-from fileupload.models import Files, UserFileAccess
+from fileupload.models import Files, UserFileAccess, UserFileLog
 from fileupload.serializer.userfileserializer import UserFileSerializer, SharedFileSerializer
 import os
 from django.utils import timezone
@@ -46,7 +46,13 @@ class ShareFileView(generics.GenericAPIView):
             if not files.exists():
                 raise  UserFileAccess.DoesNotExist
             files.delete()
-            return Response({"message": "file deleted successfully"}, status=status.HTTP_200_OK)
+            UserFileLog.objects.create(
+                action = "DELETE",
+                file = files[0],
+                message = f"removed the file access",
+                user = request.user
+            )
+            return Response({"message": "removed file access"}, status=status.HTTP_200_OK)
         except UserFileAccess.DoesNotExist:
             return Response(
                 {
@@ -84,6 +90,13 @@ class ShareFileView(generics.GenericAPIView):
                         }
                     )
 
+                    UserFileLog.objects.create(
+                        action = "UPLOAD",
+                        file = file,
+                        message = f"granded {access.role_name} to {user_data.email}",
+                        user = request.user
+                    )
+
                     if created :
                         pass
                     else:
@@ -117,13 +130,19 @@ class MoveToBinView(generics.GenericAPIView):
     def delete(self, request, file_name):
         try:
             filepath = os.path.join(settings.MEDIA_ROOT, file_name )
-            instance = Files.objects.get(file_link=file_name)
+            instance = Files.objects.get(file_link=file_name, is_delete=False)
     
             if instance.user != request.user:
                 return Response({"error": "you are not authorized to move the file to bin"}, status=status.HTTP_401_UNAUTHORIZED)
             if os.path.exists(filepath): 
                 instance.is_delete = True
                 instance.save()
+                UserFileLog.objects.create(
+                    action = "MOVED TO BIN",
+                    file = Files.objects.get(file_link = file_name),
+                    message = f"file moved to bin",
+                    user = request.user
+                )
                 return Response({"message":"File Moved to Bin Successfully"}, status=status.HTTP_200_OK)
             else:
                 return Response({"error": "file not found"}, status=status.HTTP_400_BAD_REQUEST)
@@ -146,6 +165,12 @@ class MoveToBinView(generics.GenericAPIView):
             if os.path.exists(filepath): 
                 instance.is_delete = False
                 instance.save()
+                UserFileLog.objects.create(
+                    action = "RESTORED FROM BIN",
+                    file = Files.objects.get(file_link = file_name),
+                    message = f"file restored from bin",
+                    user = request.user
+                )
                 return Response({"message":"File restored from bin successfully"}, status=status.HTTP_200_OK)
             else:
                 return Response({"error": "File not found"}, status=status.HTTP_400_BAD_REQUEST)

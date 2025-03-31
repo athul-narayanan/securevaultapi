@@ -7,7 +7,7 @@ import os
 import time
 from utils.encrypt import encrypt_file
 from fileupload.serializer.fileuploadserializer import FileUploadSerializer
-from fileupload.models import Files
+from fileupload.models import Files, UserFileLog
 import magic
 
 class FileUploadView(generics.GenericAPIView):
@@ -44,7 +44,6 @@ class FileUploadView(generics.GenericAPIView):
             file = serializer.validated_data
             filesize = self.get_filesize(file['file'].size)
             filetype = self.get_filetype(file['file'])
-            print(filesize, filetype)
             filepath = os.path.join(settings.MEDIA_ROOT, random_str + file["file"].name )
             with open(filepath, 'wb+') as f:
                 data = file.get("file").read()
@@ -60,6 +59,13 @@ class FileUploadView(generics.GenericAPIView):
                 file_link = filelink,
                 size = filesize,
                 type=filetype,
+                user = request.user
+            )
+
+            UserFileLog.objects.create(
+                action = "UPLOAD",
+                file = updatedfile,
+                message = f"uploaded the file",
                 user = request.user
             )
             
