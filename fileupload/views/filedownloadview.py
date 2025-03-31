@@ -5,8 +5,10 @@ from django.conf import settings
 import os
 import time
 from utils.encrypt import decrypt_file
-from fileupload.models import Files
+from fileupload.models import Files, UserFileLog
 from rest_framework import status
+from auditlog.models import LogEntry
+from django.contrib.contenttypes.models import ContentType
 
 
 
@@ -14,27 +16,52 @@ class FileHandleView(generics.GenericAPIView):
     """
     This view is used to download and delete file
     """
-    
     def get(self, request, file_name):
        filepath = os.path.join(settings.MEDIA_ROOT, file_name )
        file_content = decrypt_file(filepath)
+       # Create Audit log for file download
+       LogEntry.objects.create(
+            content_type=ContentType.objects.get_for_model(Files),
+            action=3, 
+            object_repr = file_name,
+            changes_text = f"{file_name} downloaded",
+            actor = request.user
+        )
        
+       # Add file access log entry
+       UserFileLog.objects.create(
+           action = "ACCESS",
+           file = Files.objects.get(file_link = file_name),
+           message = f"downloaded the file",
+           user = request.user
+       )
        response = HttpResponse(file_content, content_type='application/octet-stream')
        response['Content-Disposition'] = f'attachment; filename="{file_name}"'
        return response
     
     def delete(self, request, file_name):
-        filepath = os.path.join(settings.MEDIA_ROOT, file_name )
-        instance = Files.objects.get(file_link=file_name)
-        print(filepath)
-        if instance.user != request.user:
-            return Response({"error": "you are not authorized to delete the file"}, status=status.HTTP_401_UNAUTHORIZED)
-        if os.path.exists(filepath): 
-            os.remove(filepath)
-            instance.delete()
-            return Response({"message":"File Deleted Successfully"}, status=status.HTTP_200_OK)
-        else:
+        try:
+            filepath = os.path.join(settings.MEDIA_ROOT, file_name )
+            instance = Files.objects.get(file_link=file_name)
+            if instance.user != request.user:
+                return Response({"error": "you are not authorized to delete the file"}, status=status.HTTP_401_UNAUTHORIZED)
+            if os.path.exists(filepath): 
+                os.remove(filepath)
+                instance.delete()
+                UserFileLog.objects.create(
+                    action = "DELETE",
+                    message = f"deleted the file {file_name}",
+                    user = request.user
+                )
+                return Response({"message":"File Deleted Successfully"}, status=status.HTTP_200_OK)
+                
+            else:
+                return Response({"error": "file not found"}, status=status.HTTP_400_BAD_REQUEST)
+        except Files.DoesNotExist:
             return Response({"error": "file not found"}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as expr:
+            print(expr)
+            return Response({"error": "invalid request"}, status=status.HTTP_400_BAD_REQUEST)
     
             
 

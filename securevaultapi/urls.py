@@ -35,5 +35,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('securevaultapi/user/', include('user.urls')),
-    path('securevaultapi/file/', include('fileupload.urls'))
+    path('securevaultapi/file/', include('fileupload.urls')),
+    path('securevaultapi/auditlogs', include('auditlogs.urls'))
 ]

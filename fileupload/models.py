@@ -47,6 +47,19 @@ class UserFileAccess(models.Model):
     created_time = models.DateField(auto_now=True)
     updated_time = models.DateField(auto_now=True)
 
+class UserFileLog(models.Model):
+    """
+      This model represents user actions on files
+    """
+
+    class Meta:
+        db_table = 'userfile_log'
+
+    message = models.CharField(max_length=512)
+    action = models.CharField(max_length=255)
+    file = models.ForeignKey(Files, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_time = models.DateField(auto_now=True)
 
 # Register Audit log for files model
 auditlog.register(Files)
