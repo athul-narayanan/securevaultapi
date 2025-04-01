@@ -20,8 +20,8 @@ Before setting up the project, you have the following installed:
    4. Enter the details according to the questionnaire
    5. Generate self signed certificate by running ```openssl x509 -req -days 365 -in django_local.csr -signkey django_local.key -out django_local.crt```
 3. Add values for below properties in docker-compose.yml
-   1. Generate certificate directory by running  ```mkdir certs```
-   2. Generate Encrypted private key by running  ```openssl genrsa -aes256 -out django_local.key 2048```
+   1. POSTGRES_DB - # represents name of the database (eg: securevaultdatabse)
+   2. POSTGRES_PASSWORD - # 
    3. Create certificate signing request by running ```openssl req -new -key django_local.key -out django_local.csr```
    4. Enter the details according to the questionnaire
    5. Generate self signed certificate by running ```openssl x509 -req -days 365 -in django_local.csr -signkey django_local.key -out django_local.crt```
