@@ -49,8 +49,9 @@ Before setting up the project, you have the following installed:
   	VALUES (2, 'READ', false, true, false);
 
     INSERT INTO public.fileaccessroles(
-	  id, role_name, is_delete, is_view, is_download)
-	  VALUES (3, 'DOWNLOAD', false, true, true);
+	id, role_name, is_delete, is_view, is_download)
+	VALUES (3, 'DOWNLOAD', false, true, true);
+   7. Now you are reading to consume the API. Refer [Swagger](https://127.0.0.1:8000/swagger/) for API documentation
 
 ## User Roles
 This application manage three main role:
