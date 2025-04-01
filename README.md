@@ -27,6 +27,30 @@ Before setting up the project, you have the following installed:
    5. EMAIL_HOST_PASSWORD - ```represents the smtp email access token used``` use this [Tutorial](https://ahnashwin1305.medium.com/setup-gmail-for-sending-emails-in-django-easy-way-57892f3587e2) to create access token.
    6. AES_KEY - ```represents strong AES key for file encryption```
    7. AES_BLOCK_SIZE - ```represents AES block size```
+4. Once all values are replaced run the application by executing ```docker-compose down -v && docker-compose up --build```
+5. Once the server is started connect to the database running on localhost at port 5434. Use the credential given while starting the application to connect to the DB
+6. Run the below sql statements.
+   ```sql
+    INSERT INTO public.userrole (id, role_name)
+    VALUES (1, 'USER');
+
+    INSERT INTO public.userrole (id, role_name)
+    VALUES (2, 'ADMIN');
+
+    INSERT INTO public.userrole (id, role_name)
+    VALUES (3, 'MASTER');
+   
+    INSERT INTO public.fileaccessroles(
+  	id, role_name, is_delete, is_view, is_download)
+  	VALUES (1, 'OWNER', true, true, true);
+
+    INSERT INTO public.fileaccessroles(
+  	id, role_name, is_delete, is_view, is_download)
+  	VALUES (2, 'READ', false, true, false);
+
+    INSERT INTO public.fileaccessroles(
+	  id, role_name, is_delete, is_view, is_download)
+	  VALUES (3, 'DOWNLOAD', false, true, true);
 
 ## User Roles
 This application manage three main role:
