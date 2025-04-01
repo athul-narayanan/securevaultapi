@@ -29,8 +29,8 @@ DEBUG = True
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = '/uploads/'
 
-AES_KEY = "asdgnhthyjloiuhnbg56791234567hsd"
-AES_BLOCK_SIZE = 32
+AES_KEY = os.environ['AES_KEY']
+AES_BLOCK_SIZE = os.environ['AES_BLOCK_SIZE']
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
@@ -183,8 +183,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'athulnarayanan62@gmail.com'
-EMAIL_HOST_PASSWORD = 'gzzy tuuu btqe nhng'
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 
 
 # Internationalization
