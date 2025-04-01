@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: securevaultdatabase
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Algoma@2024
+
+  redis:
+    image: redis
+
+  api:
+    build: .
+    command: >
+      sh -c "
+            python manage.py wait_for_db &&
+            python manage.py collectstatic --noinput &&
+            python manage.py makemigrations user &&
+            python manage.py makemigrations fileupload &&
+            python manage.py migrate &&
+           ./secure_server.sh"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./static:/app/static
+    depends_on:
+      - db
+      - redis
+    environment:
+    - POSTGRES_NAME=securevaultdatabase
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=Algoma@2024
+    - POSTGRES_HOST=db
+    - POSTGRES_PORT=5432

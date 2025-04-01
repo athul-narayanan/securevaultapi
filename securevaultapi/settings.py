@@ -17,6 +17,15 @@ from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+# Required for development
+DEBUG = True
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = '/uploads/'
 
@@ -64,11 +73,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework_simplejwt',
     'user',
+    'utils',
     'fileupload',
     'drf_yasg',
     'corsheaders',
     "auditlog",
-    "auditlogs"
+    "auditlogs",
+    "sslserver"
 ]
 
 MIDDLEWARE = [
@@ -117,11 +128,11 @@ WSGI_APPLICATION = 'securevaultapi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'securevaultdatabase', 
-        'USER': 'postgres',
-        'PASSWORD': 'Algoma@2024',
-        'HOST': '127.0.0.1', 
-        'PORT': '5432',
+        'NAME': os.environ['POSTGRES_NAME'],  # No default - fail fast
+        'USER': os.environ['POSTGRES_USER'],
+        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
+        'HOST': os.environ['POSTGRES_HOST'],
+        'PORT': os.environ['POSTGRES_PORT'],
     }
 }
 
@@ -144,6 +155,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
 SIMPLE_JWT = {
     "TOKEN_OBTAIN_SERIALIZER": "user.serializers.AuthenticationSerializer",
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=48),  # 48 hour for access token
@@ -153,12 +165,19 @@ SIMPLE_JWT = {
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',  # Use the appropriate Redis server URL
+        'LOCATION': 'redis://redis:6379/1',  # Use the appropriate Redis server URL
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
     }
 }
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+
+os.environ['SSL_CERT_FILE'] = os.path.join(BASE_DIR, 'certs/django_local.crt')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -182,8 +201,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
