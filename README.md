@@ -20,14 +20,16 @@ Before setting up the project, you have the following installed:
    4. Enter the details according to the questionnaire
    5. Generate self signed certificate by running ```openssl x509 -req -days 365 -in django_local.csr -signkey django_local.key -out django_local.crt```
 3. Add values for below properties in docker-compose.yml
-   1. POSTGRES_DB - # represents name of the database (eg: securevaultdatabse)
-   2. POSTGRES_PASSWORD - # 
-   3. Create certificate signing request by running ```openssl req -new -key django_local.key -out django_local.csr```
-   4. Enter the details according to the questionnaire
-   5. Generate self signed certificate by running ```openssl x509 -req -days 365 -in django_local.csr -signkey django_local.key -out django_local.crt```
+   1. POSTGRES_DB - ```represents name of the database (eg: securevaultdatabse)```
+   2. POSTGRES_PASSWORD - ```represents password of the database```
+   3. PASS_PHRASE - ```represents passphrase used while creating the certificate```
+   4. EMAIL_HOST_USER - ```represents system email address which can be used to send email to the users```
+   5. EMAIL_HOST_PASSWORD - ```represents the smtp email access token used``` use this [Tutorial](https://ahnashwin1305.medium.com/setup-gmail-for-sending-emails-in-django-easy-way-57892f3587e2) to create access token.
+   6. AES_KEY - ```represents strong AES key for file encryption```
+   7. AES_BLOCK_SIZE - ```represents AES block size```
 
 ## User Roles
 This application manage three main role:
 1. User: This role contains basic level of access (eg: File upload ans sharing)
 2. Admin: This role has authority to create user and manage user.
-3. Manager: This role is a super role in the application will all access including manage admins and users.
+3. Master: This role is a super role in the application will all access including manage admins and users.
