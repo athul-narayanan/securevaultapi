@@ -64,7 +64,10 @@ class FileUploadView(generics.GenericAPIView):
 
             UserFileLog.objects.create(
                 action = "UPLOAD",
-                file = updatedfile,
+                file_name = filename,
+                file_link = filelink,
+                size = filesize,
+                type=filetype,
                 message = f"uploaded the file",
                 user = request.user
             )

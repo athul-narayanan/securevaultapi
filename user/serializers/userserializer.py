@@ -15,7 +15,16 @@ class UserSerializer(serializers.ModelSerializer):
         """
         create and return a user
         """
-        return get_user_model().objects.create_user(**data)
+        user = get_user_model().objects.create_user(**data)
+        return {
+            "id": user.id,
+            "email": user.email,
+            "mobile": user.mobile,
+            "role_id": user.role_id,
+            "firstname": user.firstname,
+            "lastname": user.lastname,
+            "password": "*****************"
+        }
 
 class UserGetSerializer(serializers.ModelSerializer):
     """
