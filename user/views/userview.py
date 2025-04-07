@@ -60,7 +60,7 @@ class GetAllUsersView(generics.CreateAPIView):
     """
 
     def get(self, request):
-        data = User.objects.filter(role_id__lt=request.user.role_id)
+        data = User.objects.all()
         users = UserGetSerializer(data, many=True) 
         return Response(users.data)
    

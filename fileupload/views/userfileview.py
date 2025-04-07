@@ -42,16 +42,19 @@ class ShareFileView(generics.GenericAPIView):
             )
         id = int(request.query_params.get('id'))
         try:
-            files = UserFileAccess.objects.filter(user=request.user, file=id)
+            files = UserFileAccess.objects.filter(user=request.user, id=id)
             if not files.exists():
                 raise  UserFileAccess.DoesNotExist
-            files.delete()
             UserFileLog.objects.create(
                 action = "DELETE",
-                file = files[0],
+                file_name = files[0].file.file_name,
+                file_link = files[0].file.file_link,
+                size = files[0].file.size,
+                type=files[0].file.type,
                 message = f"removed the file access",
                 user = request.user
             )
+            files.delete()
             return Response({"message": "removed file access"}, status=status.HTTP_200_OK)
         except UserFileAccess.DoesNotExist:
             return Response(
@@ -91,8 +94,11 @@ class ShareFileView(generics.GenericAPIView):
                     )
 
                     UserFileLog.objects.create(
-                        action = "UPLOAD",
-                        file = file,
+                        action = "GRANDED ACCESS",
+                        file_name = file.file_name,
+                        file_link = file.file_link,
+                        size = file.size,
+                        type = file.type,
                         message = f"granded {access.role_name} to {user_data.email}",
                         user = request.user
                     )
@@ -137,12 +143,18 @@ class MoveToBinView(generics.GenericAPIView):
             if os.path.exists(filepath): 
                 instance.is_delete = True
                 instance.save()
+                file = Files.objects.get(file_link = file_name)
                 UserFileLog.objects.create(
                     action = "MOVED TO BIN",
-                    file = Files.objects.get(file_link = file_name),
+                    file_name = file.file_name,
+                    file_link = file.file_link,
+                    size = file.size,
+                    type = file.type,
                     message = f"file moved to bin",
                     user = request.user
                 )
+
+                UserFileAccess.objects.filter(file=file).delete()
                 return Response({"message":"File Moved to Bin Successfully"}, status=status.HTTP_200_OK)
             else:
                 return Response({"error": "file not found"}, status=status.HTTP_400_BAD_REQUEST)
@@ -165,9 +177,13 @@ class MoveToBinView(generics.GenericAPIView):
             if os.path.exists(filepath): 
                 instance.is_delete = False
                 instance.save()
+                file = Files.objects.get(file_link = file_name)
                 UserFileLog.objects.create(
                     action = "RESTORED FROM BIN",
-                    file = Files.objects.get(file_link = file_name),
+                    file_name = file.file_name,
+                    file_link = file.file_link,
+                    size = file.size,
+                    type = file.type,
                     message = f"file restored from bin",
                     user = request.user
                 )

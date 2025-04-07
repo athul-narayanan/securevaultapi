@@ -26,4 +26,4 @@ class SharedFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserFileAccess
-        fields = ['user','access','created_time', 'updated_time', 'file_name', 'file_link', 'type', 'size' ]
+        fields = ['user','access','created_time', 'updated_time', 'file_name', 'file_link', 'type', 'size', 'id' ]

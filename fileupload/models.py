@@ -57,7 +57,10 @@ class UserFileLog(models.Model):
 
     message = models.CharField(max_length=512)
     action = models.CharField(max_length=255)
-    file = models.ForeignKey(Files, on_delete=models.SET_NULL, null=True)
+    file_name = models.CharField(max_length=255)
+    file_link = models.CharField(max_length=255)
+    type = models.CharField(max_length=255)
+    size = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_time = models.DateField(auto_now=True)
 

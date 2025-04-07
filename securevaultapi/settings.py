@@ -30,7 +30,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = '/uploads/'
 
 AES_KEY = os.environ['AES_KEY']
-AES_BLOCK_SIZE = os.environ['AES_BLOCK_SIZE']
+AES_BLOCK_SIZE = int(os.environ['AES_BLOCK_SIZE'])
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
@@ -98,7 +98,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3001",  # Add your frontend URL here
+    "http://localhost:4200",  # Add your frontend URL here
 ]
 
 ROOT_URLCONF = 'securevaultapi.urls'

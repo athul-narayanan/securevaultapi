@@ -28,10 +28,14 @@ class FileHandleView(generics.GenericAPIView):
             actor = request.user
         )
        
+       file = Files.objects.get(file_link = file_name)
        # Add file access log entry
        UserFileLog.objects.create(
            action = "ACCESS",
-           file = Files.objects.get(file_link = file_name),
+           file_name = file.file_name,
+           file_link = file.file_link,
+           size = file.size,
+           type = file.type,
            message = f"downloaded the file",
            user = request.user
        )
@@ -47,12 +51,16 @@ class FileHandleView(generics.GenericAPIView):
                 return Response({"error": "you are not authorized to delete the file"}, status=status.HTTP_401_UNAUTHORIZED)
             if os.path.exists(filepath): 
                 os.remove(filepath)
-                instance.delete()
                 UserFileLog.objects.create(
                     action = "DELETE",
                     message = f"deleted the file {file_name}",
+                    file_name = instance.file_name,
+                    file_link = instance.file_link,
+                    size = instance.size,
+                    type = instance.type,
                     user = request.user
                 )
+                instance.delete()
                 return Response({"message":"File Deleted Successfully"}, status=status.HTTP_200_OK)
                 
             else:
