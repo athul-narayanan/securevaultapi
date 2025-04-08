@@ -11,7 +11,7 @@ Before setting up the project, you have the following installed:
 1. Install Docker Desktop [Download Docker Desktop](https://www.docker.com/products/docker-desktop/)
 2. Install Pgadmin 4  [Download Pgadmin 4](https://www.pgadmin.org/download/)
 
-## Steps to run angular application
+## Steps to run the application
 1. Clone [Repository](https://github.com/athul-narayanan/securevaultapi.git) locally.
 2. Generate TLS Certificate following the below steps
    1. Generate certificate directory by running  ```mkdir certs```
